@@ -16,7 +16,6 @@ class CapsuleRecord {
 
 class DataCapsule {
     constructor(ownerKey, protocol, version, encodingScheme, instanceID) {
-        this.ownerKey = ownerKey;
         this.protocol = protocol;
         this.version = version;
         this.encodingScheme = encodingScheme;
