@@ -4,7 +4,6 @@ const hash = crypto.createHash('sha256');
 
 class CapsuleRecord {
     constructor(data) {
-        // Signature?
         this.previousRecord;
         this.previousHash;
         this.dataHash = hash.update(data).digest('hex');
@@ -16,8 +15,7 @@ class CapsuleRecord {
 }
 
 class DataCapsule {
-    constructor(ownerKey, protocol, version, encodingScheme, instanceID) {
-        this.ownerKey = ownerKey;
+    constructor(protocol, version, encodingScheme, instanceID) {
         this.protocol = protocol;
         this.version = version;
         this.encodingScheme = encodingScheme;
@@ -26,6 +24,7 @@ class DataCapsule {
         this.recentRecord;
         // Hash over basic data to generate GDPname
         this.name = hash.update(this.ownerKey + this.protocol + this.version + this.encodingScheme + this.instanceID).digest('hex');
+        // TODO: Primary record
     }
 
     validateRecord(verifyKey, record) {
