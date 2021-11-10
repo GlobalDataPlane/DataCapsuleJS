@@ -11,37 +11,49 @@ class CapsuleRecord {
         this.data = data;
 
         this.headerHash;
+        this.signature;
     }
 }
 
 class DataCapsule {
-    constructor(ownerKey, protocol, version, encodingScheme) {
+    constructor(ownerKey, protocol, version, encodingScheme, instanceID) {
         this.ownerKey = ownerKey;
         this.protocol = protocol;
         this.version = version;
         this.encodingScheme = encodingScheme;
-        this.instanceID; // Nonce?
+        this.instanceID = instanceID; 
 
         this.recentRecord;
         // Hash over basic data to generate GDPname
         this.name = hash.update(this.ownerKey + this.protocol + this.version + this.encodingScheme + this.instanceID).digest('hex');
     }
 
-    readLast() {
-        // TODO: Verify
-        return recentRecord;
+    validateRecord(verifyKey, record) {
+        const verify = createVerify('SHA256');
+        verify.update(record.headerHash);
+        verify.end();
+        var sigVerify = verify.verify(verifyKey, record.signature);
+
+        var recHash = hash.update(record.previousHash + record.dataHash).digest('hex');
+        var hashVerify = recHash !== lastRec.headerHash;
+
+        return sigVerify && hashVerify;
+    }
+
+    readLast(verifyKey) {
+        if (this.validateRecord(verifyKey, this.recentRecord)) {
+            return this.recentRecord;
+        }
+        return "Validation failed.";
     }
 
     write(signKey, verifyKey, data) {
-        // Confirm key is valid
-
-        // Pull hash for prev record
-        // Confirm hash for prev record
         var lastRec = this.recentRecord;
-        var lastHash = hash.update(lastRec.previousHash + lastRec.dataHash).digest('hex');
-        if (lastHash !== lastRec.headerHash) {
-            return "Record manipulation detected, write rejected."
-        }
+
+        // Verify previous record's authenticity
+        if (!this.validateRecord(verifyKey, this.recentRecord)) {
+            return "Validation fail, check records."
+        }        
 
         // Create new CapsuleRecord
         var newRec = new CapsuleRecord(data);      
@@ -53,10 +65,15 @@ class DataCapsule {
         // Generate header hash
         newRec.headerHash = hash.update(newRec.dataHash + newRec.previousHash).digest('hex');
 
+        // Sign record
+        const sign = createSign('SHA256');
+        sign.update(newRec.headerHash);
+        sign.end();
+        const signature = sign.sign(signKey);
+        newRec.signature = signature;
+
         // Append and update DataCapsule
         this.recentRecord = newRec;
-
-        // TODO: Sign
 
         // Return hash of record
         return newRec.headerHash;
