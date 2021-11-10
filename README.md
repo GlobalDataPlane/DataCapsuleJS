@@ -8,7 +8,7 @@ This library allows for the creation of a basic DataCapsule.  It has two functio
 
 ## DataCapsule Creation
 
-A DataCapsule requires four inputs, `protocol`, `version`, `encodingScheme`, and an `instanceID`.  A SHA-256 hash is taken over these inputs to create the DataCapsule's name.  The capsule also stores the most recent record in `recentRecord`.
+A DataCapsule requires five inputs, `ownerKey`, `protocol`, `version`, `encodingScheme`, and an `instanceID`.  A SHA-256 hash is taken over these inputs to create the DataCapsule's name.  The capsule also stores the most recent record in `recentRecord`.
 
 ## DataCapsule Record Format
 

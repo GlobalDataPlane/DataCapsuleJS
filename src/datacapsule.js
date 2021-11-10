@@ -15,7 +15,8 @@ class CapsuleRecord {
 }
 
 class DataCapsule {
-    constructor(protocol, version, encodingScheme, instanceID) {
+    constructor(ownerKey, protocol, version, encodingScheme, instanceID) {
+        this.ownerKey = ownerKey;
         this.protocol = protocol;
         this.version = version;
         this.encodingScheme = encodingScheme;
@@ -24,7 +25,18 @@ class DataCapsule {
         this.recentRecord;
         // Hash over basic data to generate GDPname
         this.name = hash.update(this.ownerKey + this.protocol + this.version + this.encodingScheme + this.instanceID).digest('hex');
-        // TODO: Primary record
+        
+        // Initial record
+        var newRec = new CapsuleRecord(data);      
+        newRec.previousHash = "";
+        newRec.headerHash = hash.update(newRec.dataHash + newRec.previousHash).digest('hex');
+        const sign = createSign('SHA256');
+        sign.update(newRec.headerHash);
+        sign.end();
+        const signature = sign.sign(ownerKey);
+        newRec.signature = signature;
+        this.recentRecord = newRec;
+
     }
 
     validateRecord(verifyKey, record) {
