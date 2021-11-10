@@ -1,62 +1,62 @@
+#!/usr/bin/node
+var crypto = require('crypto');
+const hash = crypto.createHash('sha256');
+
 class CapsuleRecord {
     constructor(data) {
         // Signature?
         this.previousRecord;
         this.previousHash;
-        this.dataHash;
+        this.dataHash = hash.update(data).digest('hex');
         this.data = data;
 
         this.headerHash;
-        return this.headerHash;
     }
 }
 
 class DataCapsule {
     constructor(ownerKey, protocol, version, encodingScheme) {
-        // Should we also have forward links?
         this.ownerKey = ownerKey;
         this.protocol = protocol;
         this.version = version;
         this.encodingScheme = encodingScheme;
         this.instanceID; // Nonce?
 
-        // Hash over basic data to generate GDPname
         this.recentRecord;
-        this.name;
-
-        return this.name;
+        // Hash over basic data to generate GDPname
+        this.name = hash.update(this.ownerKey + this.protocol + this.version + this.encodingScheme + this.instanceID).digest('hex');
     }
 
     readLast() {
+        // TODO: Verify
         return recentRecord;
     }
 
-    write(key, data) {
-
+    write(signKey, verifyKey, data) {
         // Confirm key is valid
 
         // Pull hash for prev record
         // Confirm hash for prev record
         var lastRec = this.recentRecord;
-        var lastHash = compute;
+        var lastHash = hash.update(lastRec.previousHash + lastRec.dataHash).digest('hex');
         if (lastHash !== lastRec.headerHash) {
             return "Record manipulation detected, write rejected."
         }
 
         // Create new CapsuleRecord
-        var newRec = new CapsuleRecord(data);
-
-        // Generate data hashes
-        
+        var newRec = new CapsuleRecord(data);      
 
         // Add prev record data for Capsule record
-        newRec.previousHash = lastHash;
+        newRec.previousHash = lastRec.headerHash;
         newRec.previousRecord = lastRec;
 
         // Generate header hash
+        newRec.headerHash = hash.update(newRec.dataHash + newRec.previousHash).digest('hex');
 
         // Append and update DataCapsule
         this.recentRecord = newRec;
+
+        // TODO: Sign
 
         // Return hash of record
         return newRec.headerHash;
