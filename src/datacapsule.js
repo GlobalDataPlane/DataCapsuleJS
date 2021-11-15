@@ -49,6 +49,8 @@ function validateRecord(record, verifyKey) {
     return sigVerify && hashVerify;
 }
 
+// Do the capsules need to be written out to disk? If so need create function.
+
 function dcReadLast(dataCapsule, verifyKey) {
     if (validateRecord(dataCapsule.recentRecord, verifyKey)) {
         return dataCapsule.recentRecord;
@@ -87,19 +89,21 @@ function dcWrite(dataCapsule, signKey, verifyKey, data) {
     return newRec.headerHash;
 }
 
+module.exports = {DataCapsule: DataCapsule, dcWrite: dcWrite, dcReadLast: dcReadLast};
 
 
-const { privateKey, publicKey } = crypto.generateKeyPairSync('rsa', {
-    modulusLength: 2048,
-});
-var testCapsule = new DataCapsule(privateKey, "TestProt", "v1", "testscheme", "12");
-// console.log(testCapsule);
-// console.log(testCapsule.signature);
-// var capsuleString = JSON.stringify(testCapsule);
-// console.log(capsuleString);
-// var restoredCapsule = JSON.parse(capsuleString);
-// console.log(restoredCapsule);
-// restoredCapsule.signature = Buffer(restoredCapsule.signature.data);
-dcWrite(testCapsule, privateKey, publicKey, "hello this is a test");
-// console.log(testCapsule);
-console.log(dcReadLast(testCapsule, publicKey).data);
+
+// const { privateKey, publicKey } = crypto.generateKeyPairSync('rsa', {
+//     modulusLength: 2048,
+// });
+// var testCapsule = new DataCapsule(privateKey, "TestProt", "v1", "testscheme", "12");
+// // console.log(testCapsule);
+// // console.log(testCapsule.signature);
+// // var capsuleString = JSON.stringify(testCapsule);
+// // console.log(capsuleString);
+// // var restoredCapsule = JSON.parse(capsuleString);
+// // console.log(restoredCapsule);
+// // restoredCapsule.signature = Buffer(restoredCapsule.signature.data);
+// dcWrite(testCapsule, privateKey, publicKey, "hello this is a test");
+// // console.log(testCapsule);
+// console.log(dcReadLast(testCapsule, publicKey).data);
