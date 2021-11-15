@@ -4,7 +4,7 @@
   "description": "A basic JavaScript library for DataCapsules",
   "main": "datacapsule.js",
   "scripts": {
-    "test": "npm test"
+    "test": "mocha"
   },
   "author": "William Mullen",
   "license": "ISC",

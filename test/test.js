@@ -12,23 +12,15 @@ describe( "DataCapsule", () => {
     } );
   
     describe( "Basic Tests", () => {
+        beforeEach( () => {
+            console.log( "Running basic test." );
+          } );
+
         const { privateKey, publicKey } = crypto.generateKeyPairSync('rsa', {
             modulusLength: 2048,
         });
         var testCapsule = new dc.DataCapsule(privateKey, "TestProt", "v1", "TestScheme", "12");
-        beforeEach( () => {
-            // const { privateKey, publicKey } = crypto.generateKeyPairSync('rsa', {
-            //     modulusLength: 2048,
-            // });
-            
-            // // var capsuleString = JSON.stringify(testCapsule);
-            // // var restoredCapsule = JSON.parse(capsuleString);
-            // // restoredCapsule.signature = Buffer(restoredCapsule.signature.data);
-            // dc.dcWrite(testCapsule, privateKey, publicKey, "hello this is a test");
-            // // console.log(testCapsule);
-            // console.log(dc.dcReadLast(testCapsule, publicKey).data);
-            console.log( "beforeEach executes before every test" );
-        });
+
 
         it( "Checking capsule basics", () => {
             assert.equal(testCapsule.protocol, "TestProt" );
@@ -36,10 +28,29 @@ describe( "DataCapsule", () => {
             assert.equal(testCapsule.encodingScheme, "TestScheme");
             assert.equal(testCapsule.instanceID, "12");
         } );
-  
-    //   it( "should return 0 when adding zeros", () => {
-    //     assert.equal( calc.add( 0, 0 ), 0 );
-    //   } );
+
+        it( "Check record append", () => {
+            var lastHeaderHash = testCapsule.recentRecord.headerHash;
+            dc.dcWrite(testCapsule, privateKey, publicKey, "Basic write test.");
+            var expectedDataHash = crypto.createHash('sha256').update("Basic write test.").digest('hex');
+            var expectedHeaderHash = crypto.createHash('sha256').update(lastHeaderHash + expectedDataHash).digest('hex');
+
+            assert.equal(testCapsule.recentRecord.data, "Basic write test.");
+            assert.equal(testCapsule.recentRecord.dataHash, expectedDataHash);
+            assert.equal(testCapsule.recentRecord.previousHash, testCapsule.recentRecord.previousRecord.headerHash);
+            assert.equal(testCapsule.recentRecord.headerHash, expectedHeaderHash);
+            assert.notEqual(testCapsule.recentRecord.previousRecord, null);
+            
+            const verify = crypto.createVerify('SHA256');
+            verify.update(testCapsule.recentRecord.headerHash);
+            verify.end();
+            assert.ok(verify.verify(publicKey, testCapsule.recentRecord.signature, 'hex'));
+        });
+
+        it( "Check record read", () => {
+            var record = dc.dcReadLast(testCapsule, publicKey);
+            assert.equal(record.data, "Basic write test.")
+        });
     } );
-  } );
+} );
   
