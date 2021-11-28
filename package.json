@@ -2,13 +2,13 @@
   "name": "datacapsulejs",
   "version": "1.0.0",
   "description": "A basic JavaScript library for DataCapsules",
-  "main": "datacapsule.js",
+  "main": "./src/datacapsule.js",
   "scripts": {
     "test": "mocha"
   },
   "author": "William Mullen",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "mocha": "^9.1.3"
-  } 
+  }
 }
