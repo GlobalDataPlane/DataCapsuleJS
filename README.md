@@ -3,6 +3,7 @@
 [![GitHub license](https://img.shields.io/github/license/GlobalDataPlane/DataCapsuleJS)](https://github.com/GlobalDataPlane/DataCapsuleJS/blob/master/LICENSE)
 [![GitHub tag](https://img.shields.io/github/tag/GlobalDataPlane/DataCapsuleJS.svg)](https://github.com/GlobalDataPlane/DataCapsuleJS/tags)
 [![GitHub release](https://img.shields.io/github/release/GlobalDataPlane/DataCapsuleJS.svg)](https://github.com/GlobalDataPlane/DataCapsuleJS/releases)
+
 [Contributing](https://github.com/GlobalDataPlane/DataCapsuleJS/blob/master/CONTRIBUTING.md) |
 [Security](https://github.com/GlobalDataPlane/DataCapsuleJS/blob/master/SECURITY.md)
 
