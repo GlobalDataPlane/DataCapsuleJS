@@ -1,10 +1,16 @@
 # DataCapsuleJS
+[![GitHub issues](https://img.shields.io/github/issues/GlobalDataPlane/DataCapsuleJS)](https://github.com/GlobalDataPlane/DataCapsuleJS/issues)
+[![GitHub license](https://img.shields.io/github/license/GlobalDataPlane/DataCapsuleJS)](https://github.com/GlobalDataPlane/DataCapsuleJS/blob/master/LICENSE)
+[![GitHub tag](https://img.shields.io/github/tag/GlobalDataPlane/DataCapsuleJS.svg)](https://github.com/GlobalDataPlane/DataCapsuleJS/tags)
+[![GitHub release](https://img.shields.io/github/release/GlobalDataPlane/DataCapsuleJS.svg)](https://github.com/GlobalDataPlane/DataCapsuleJS/releases)
+[Contributing](https://github.com/GlobalDataPlane/DataCapsuleJS/blob/master/CONTRIBUTING.md) |
+[Security](https://github.com/GlobalDataPlane/DataCapsuleJS/blob/master/SECURITY.md)
 
 A basic JavaScript implementation of DataCapsules.
 
 ## What it Implements
 
-This library allows for the creation of a basic DataCapsule.  It has two functions, readLast and write.  It is designed for the Protoblocks project.
+This library allows for the creation of a basic DataCapsule.  It has two functions, readLast and write.  It is designed for the [ProtoBlocks](https://github.com/ProtoBlocks/ProtoBlocks) project.
 
 ## DataCapsule Creation
 
